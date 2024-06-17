@@ -2,6 +2,14 @@
   text-align: center;
 }
 
+.main-bg {
+  height: 300px;
+  background-image: url('./img/bg.png');
+  /* 이미지 넣는법 './'넣고 경로 넣기 */
+  background-size: cover;
+  background-position: center;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
