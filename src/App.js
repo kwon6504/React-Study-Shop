@@ -37,9 +37,7 @@ function App() {
         <Row>
           {shoes.map(function (a, i) {
             return (
-
               <Goods shoes={shoes[i]}></Goods>
-
             )
           }
           )
