@@ -33,17 +33,19 @@ function App() {
       </Navbar>
 
       <div className='main-bg' style={{ backgroundImage: 'url(' + bg + ')' }}></div>
+      <Container>
+        <Row>
+          {shoes.map(function (a, i) {
+            return (
 
-      {shoes.map(function (a, i) {
-        return (
-          <>
-            <Goods shoes={shoes[i]}></Goods>
-          </>
-        )
-      }
-      )
-      }
+              <Goods shoes={shoes[i]}></Goods>
 
+            )
+          }
+          )
+          }
+        </Row>
+      </Container>
     </div>
   );
 }
@@ -51,17 +53,11 @@ function App() {
 function Goods(props) {
 
   return (
-    <>
-      <Container>
-        <Row>
-          <Col>
-            <img src={'https://codingapple1.github.io/shop/shoes' + (props.shoes.id + 1) + '.jpg'} width='50%'></img>
-            <h4>{props.shoes.title}</h4>
-            <p>{props.shoes.price} Won</p>
-          </Col>
-        </Row>
-      </Container>
-    </>
+    <Col md={4}>
+      <img src={'https://codingapple1.github.io/shop/shoes' + (props.shoes.id + 1) + '.jpg'} width='80%'></img>
+      <h4>{props.shoes.title}</h4>
+      <p>{props.shoes.price} Won</p>
+    </Col>
   );
 }
 
