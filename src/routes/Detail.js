@@ -1,5 +1,6 @@
 /* eslint-disable */ //Lint 끄는 기능
 
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 //styled-components를 사용하면 css에 가지 않고 js파일에서 전부 해결가능
 //장점 1.Css파일 안열어도 된다. 2.스타일이 다른 js파일로 오염되지 않는다. 3.페이지 로딩시간 단축
@@ -17,7 +18,30 @@ import styled from "styled-components";
 //(참고) 기존 스타일 복사가능
 // let NewBtn = styled/button(YellowBtn)'여기 개인적인 스타일 가능'
 
+//컴포넌트의 Lifecycle를 알고 있다면 아래 3가지 중간중간에 간섭 코드실행가능
+//페이지에 장착되기도하고(mount), 가끔 업데이트도 되고(update), 필요없으면 제거되고(unmount)
+
 function Detail(props) {
+
+  //Lifecycle
+  //Side Effect : 함수의 핵심기능과 상관없는 부가기능, useEffect는 Side Effect 안에 담는 그릇이다.
+  //useEffect는 안에있는 코드가 mount, update시에 실행된다.
+  //useEffect 쓰는 이유 = html 렌더링 후에 동작한다.
+  //useEffect 안에 적는 코드들은 -어려운 연산 -서버에서 데이터 가져오는 작업 -타이머 장착하는거
+  useEffect(() => {
+    console.log('안녕')
+  })
+
+  useEffect(()=>{
+    setTimeout(()=>{setRemove(false)},2000)
+  })
+
+  let [remove, setRemove] = useState(true);
+
+  //실행할 코드가 1000=1초후에 실행한다.
+  // setTimeout(()=>{실행할코드}, 1000);
+
+  let [count, setCount] = useState(0);
 
   //유저가 URL파라미터에 입력한 것을 가져오는 useParams()
   let { id } = useParams();
@@ -42,8 +66,13 @@ function Detail(props) {
   return (
     <>
       <div className="container">
-          {/* <YellowBtn bg='blue'>버튼</YellowBtn>
+        {
+          remove == true ? <Alert></Alert> : null
+        }
+        {/* <YellowBtn bg='blue'>버튼</YellowBtn>
           <YellowBtn bg='orange'>버튼</YellowBtn> */}
+        {count}
+        <button onClick={() => { setCount(count + 1) }}>버튼</button>
         <div className="row">
           <div className="col-md-6">
             <img src={'https://codingapple1.github.io/shop/shoes' + (props.shoes[findId.id].id + 1) + '.jpg'} width="100%" />
@@ -56,6 +85,17 @@ function Detail(props) {
           </div>
         </div>
       </div>
+    </>
+  );
+}
+
+function Alert() {
+  
+  return (
+    <>
+    <div className="alert alert-warning">
+      2초이내 구매시 할인
+    </div>
     </>
   );
 }

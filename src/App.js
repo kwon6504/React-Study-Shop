@@ -59,7 +59,7 @@ function App() {
               <Row>
                 {shoes.map(function (a, i) {
                   return (
-                    <Goods shoes={shoes[i]}></Goods>
+                    <Goods key={i} shoes={shoes[i]}></Goods>
                   )
                 }
                 )
