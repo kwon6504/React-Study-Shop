@@ -1,3 +1,5 @@
+/* eslint-disable */ //Lint 끄는 기능
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

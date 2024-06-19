@@ -68,9 +68,13 @@ function App() {
             </Container>
           </>
         }></Route>
-        <Route path='/detail' element={
-          <Detail></Detail>
-        }></Route>
+
+        {/* 페이지를 여러개 만들고 싶으면 :URL파라미터를 써도 좋다. /:파라미터 
+            (참고)URL 파라미터 만들 때  -여러개 가능 ex)'/detail/:id/:a/:b'*/}
+        
+        <Route path='/detail/:id' element={<Detail shoes={shoes}></Detail>}>
+
+        </Route>
         <Route path='/about' element={<About></About>}>
           {/* Nested Routes 라고 한다. 태그안에 태그 장정으로 
           1. route 작성이 약간 간단해진다.  2.nested routes 접속신엔 element 2개나 보임
