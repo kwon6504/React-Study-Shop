@@ -23,25 +23,37 @@ import styled from "styled-components";
 
 function Detail(props) {
 
+  let [count, setCount] = useState(0);
+  let [alert, setAlert] = useState(true);
+  let [alert1, setAlert1] = useState();
+
   //Lifecycle
   //Side Effect : 함수의 핵심기능과 상관없는 부가기능, useEffect는 Side Effect 안에 담는 그릇이다.
   //useEffect는 안에있는 코드가 mount, update시에 실행된다.
   //useEffect 쓰는 이유 = html 렌더링 후에 동작한다.
   //useEffect 안에 적는 코드들은 -어려운 연산 -서버에서 데이터 가져오는 작업 -타이머 장착하는거
+  //useEffect 실행조건 넣을 수 있는 곳은 [], []안에 있는 state가 변할때마다 실행, []이 비어있다면 컴포넌트 mount 1번만 실행된다.
+  //useEffect 안에 return()=>{}를 넣을 수 있다. useEffect 동작 전에 실행시키고 싶을때 사용.
   useEffect(() => {
-    console.log('안녕')
-  })
+    let timer = setTimeout(() => { setAlert(false) }, 2000)
+    console.log(1)
+    return () => {
+      //타이머가 중복되지 않게 기존 타이머를 제거하는 명령어
+      //(참고)clean up function은 mount시 실행안됨, unmount시 실행됨
+      clearTimeout(timer);
+      console.log(2);
+    }
+  }, [])
 
-  useEffect(()=>{
-    setTimeout(()=>{setRemove(false)},2000)
-  })
-
-  let [remove, setRemove] = useState(true);
+  //useEffect 정리
+  //1.재렌더링마다 코드 실행하고 싶으면 useEffect(()=>{})
+  //2.mount시 1회 코드실행하고 싶으면 useEffect(()=>{},[])
+  //3.unmount시 1회 코드실행하고 싶으면 useEffect(()=>{return()=>{}}) 
+  //4.useEffect 실행 전에 뭔가 실행하려면 언제나 return()=>{}
+  //5.특정 state 변경시에만 실행하려면 [state명]
 
   //실행할 코드가 1000=1초후에 실행한다.
   // setTimeout(()=>{실행할코드}, 1000);
-
-  let [count, setCount] = useState(0);
 
   //유저가 URL파라미터에 입력한 것을 가져오는 useParams()
   let { id } = useParams();
@@ -67,7 +79,7 @@ function Detail(props) {
     <>
       <div className="container">
         {
-          remove == true ? <Alert></Alert> : null
+          alert == true ? <Alert></Alert> : null
         }
         {/* <YellowBtn bg='blue'>버튼</YellowBtn>
           <YellowBtn bg='orange'>버튼</YellowBtn> */}
@@ -82,6 +94,10 @@ function Detail(props) {
             <p>{props.shoes[findId.id].content}</p>
             <p>{props.shoes[findId.id].price} Won</p>
             <button className="btn btn-danger">주문하기</button>
+            <br></br>
+            {
+              <input></input>
+            }
           </div>
         </div>
       </div>
@@ -90,12 +106,12 @@ function Detail(props) {
 }
 
 function Alert() {
-  
+
   return (
     <>
-    <div className="alert alert-warning">
-      2초이내 구매시 할인
-    </div>
+      <div className="alert alert-warning">
+        2초이내 구매시 할인
+      </div>
     </>
   );
 }
