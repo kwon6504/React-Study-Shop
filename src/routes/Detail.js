@@ -25,7 +25,7 @@ function Detail(props) {
 
   let [count, setCount] = useState(0);
   let [alert, setAlert] = useState(true);
-  let [alert1, setAlert1] = useState();
+  let [num, setNum] = useState('');
 
   //Lifecycle
   //Side Effect : 함수의 핵심기능과 상관없는 부가기능, useEffect는 Side Effect 안에 담는 그릇이다.
@@ -36,14 +36,15 @@ function Detail(props) {
   //useEffect 안에 return()=>{}를 넣을 수 있다. useEffect 동작 전에 실행시키고 싶을때 사용.
   useEffect(() => {
     let timer = setTimeout(() => { setAlert(false) }, 2000)
-    console.log(1)
-    return () => {
-      //타이머가 중복되지 않게 기존 타이머를 제거하는 명령어
-      //(참고)clean up function은 mount시 실행안됨, unmount시 실행됨
-      clearTimeout(timer);
-      console.log(2);
+    if(isNaN(num) == true){
+      window.alert('그러지마세요'); //안됬던 이유는 alert가 이미 변수로 있었기 때문이다.
     }
-  }, [])
+     return () => {
+    // 타이머가 중복되지 않게 기존 타이머를 제거하는 명령어
+    // (참고)clean up function은 mount시 실행안됨, unmount시 실행됨
+       clearTimeout(timer);
+    }
+  }, [num])
 
   //useEffect 정리
   //1.재렌더링마다 코드 실행하고 싶으면 useEffect(()=>{})
@@ -95,9 +96,8 @@ function Detail(props) {
             <p>{props.shoes[findId.id].price} Won</p>
             <button className="btn btn-danger">주문하기</button>
             <br></br>
-            {
-              <input></input>
-            }
+            {/* 이벤트 객체 e의 타겟 값인 e.target.value를 setNum 함수에 전달하여 num 상태를 업데이트합니다. */}
+            <input onChange={ (e) => { setNum(e.target.value) } } />
           </div>
         </div>
       </div>
