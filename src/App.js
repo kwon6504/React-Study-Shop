@@ -12,6 +12,7 @@ import { useState } from 'react';
 import data from './data.js';
 import Detail from './routes/Detail.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
+import axios from 'axios'; //ajax 이용한 GET요청은 axios.get('url'), 요청결과는 axios.get('url').then()
 
 //리액트 페이지 나누는ㄴ 법
 //1.컴포넌트 만들어서 상세페이지내용 채움
@@ -26,7 +27,40 @@ function App() {
   //1.변수를 export 하고 = export default 변수명, 변수가 2개라면 export default {변수명1, 변수명2}
   //2.import하면 끝 = import 작명 from './data.js', 2개를 가져오려면 import {변수명1, 변수명2} from './data.js'
   //(참고) Component도 export 가능, []=array, {}=object 라서 서로 섞어서 가능하다.
-  let [shoes] = useState(data);
+  let [shoes, setShoes] = useState(data);
+  let [count, setCount] = useState(0);
+  let [loading, setLoading] = useState(false);
+  let urls = ['https://codingapple1.github.io/shop/data2.json', 'https://codingapple1.github.io/shop/data3.json']
+  let fetchData = ()=>{
+    if(count < urls.length){
+      setLoading(true); //로딩시작
+     // ajax 쓰려면 옵션 3개 중 택1 1.XMLHttpRequest 2.fetch() 3.axios
+     axios.get(urls[count])
+     .then((result) => {
+       console.log(result.data);
+       let copy = [...shoes, ...result.data]; // ...shoes = {},{},{} ...result.data = {},{},{}
+       setShoes(copy);
+       setCount(count+1);
+       setLoading(false); //로딩종료
+     })
+     .catch(() => {
+       console.log('실패');
+     });
+    } else {
+      console.log('불러올 데이터가 없습니다.')
+      alert('불러올 상품이 없습니다.');
+    }
+
+     //서버에 요청하는 방법
+     // axios.post('/safdfas',{name:'kwon'});
+     //동시에 ajax요청 여러개 하면
+     // Promise.all([axios.get('/url1'), axios.get('/url2')])
+     // .then(()=>{}) 전부 가져오는데 성공하면 그때 then을 실행한다.
+     //원래는 서버와 문자만 주고받을 수 있습니다.
+     //"{"name":"kim"}" 따옴표쳐놓으면 array,object도 주고받기 가능 문자열로 이행해서 받아온다. 
+     //일명 JSON (axios가 json데이터를 받아오면 array,object로 자동으로 바꿔줌)
+
+  };
   //1.페이지 이동을 도와주는 useNavigate()
   let navigate = useNavigate();
 
@@ -66,12 +100,14 @@ function App() {
                 }
               </Row>
             </Container>
+            {loading && <p>로딩중...</p>}
+            {count < 2 && <button onClick={fetchData}>더보기</button>}
           </>
         }></Route>
 
         {/* 페이지를 여러개 만들고 싶으면 :URL파라미터를 써도 좋다. /:파라미터 
             (참고)URL 파라미터 만들 때  -여러개 가능 ex)'/detail/:id/:a/:b'*/}
-        
+
         <Route path='/detail/:id' element={<Detail shoes={shoes}></Detail>}>
 
         </Route>

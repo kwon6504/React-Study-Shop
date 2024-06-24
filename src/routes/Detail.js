@@ -38,6 +38,7 @@ function Detail(props) {
     let timer = setTimeout(() => { setAlert(false) }, 2000)
     if(isNaN(num) == true){
       window.alert('그러지마세요'); //안됬던 이유는 alert가 이미 변수로 있었기 때문이다.
+      setNum('');
     }
      return () => {
     // 타이머가 중복되지 않게 기존 타이머를 제거하는 명령어
@@ -97,7 +98,7 @@ function Detail(props) {
             <button className="btn btn-danger">주문하기</button>
             <br></br>
             {/* 이벤트 객체 e의 타겟 값인 e.target.value를 setNum 함수에 전달하여 num 상태를 업데이트합니다. */}
-            <input onChange={ (e) => { setNum(e.target.value) } } />
+            <input type="text" value={num} onChange={ (e) =>  setNum(e.target.value)  } />
           </div>
         </div>
       </div>
