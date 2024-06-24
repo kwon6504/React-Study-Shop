@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Nav, Tab } from "react-bootstrap"
 //styled-components를 사용하면 css에 가지 않고 js파일에서 전부 해결가능
 //장점 1.Css파일 안열어도 된다. 2.스타일이 다른 js파일로 오염되지 않는다. 3.페이지 로딩시간 단축
 //단점 1.Js파일 매우복잡해짐. 2.중복스타일은 컴포넌트간 import 할텐데 Css와 다를 바가 없어진다. 3.협업시 CSS 담당의 숙련도 이슈
@@ -26,7 +27,8 @@ function Detail(props) {
   let [count, setCount] = useState(0);
   let [alert, setAlert] = useState(true);
   let [num, setNum] = useState('');
-
+  let [tab, setTab] = useState(0);
+  
   //Lifecycle
   //Side Effect : 함수의 핵심기능과 상관없는 부가기능, useEffect는 Side Effect 안에 담는 그릇이다.
   //useEffect는 안에있는 코드가 mount, update시에 실행된다.
@@ -36,14 +38,14 @@ function Detail(props) {
   //useEffect 안에 return()=>{}를 넣을 수 있다. useEffect 동작 전에 실행시키고 싶을때 사용.
   useEffect(() => {
     let timer = setTimeout(() => { setAlert(false) }, 2000)
-    if(isNaN(num) == true){
+    if (isNaN(num) == true) {
       window.alert('그러지마세요'); //안됬던 이유는 alert가 이미 변수로 있었기 때문이다.
       setNum('');
     }
-     return () => {
-    // 타이머가 중복되지 않게 기존 타이머를 제거하는 명령어
-    // (참고)clean up function은 mount시 실행안됨, unmount시 실행됨
-       clearTimeout(timer);
+    return () => {
+      // 타이머가 중복되지 않게 기존 타이머를 제거하는 명령어
+      // (참고)clean up function은 mount시 실행안됨, unmount시 실행됨
+      clearTimeout(timer);
     }
   }, [num])
 
@@ -98,12 +100,46 @@ function Detail(props) {
             <button className="btn btn-danger">주문하기</button>
             <br></br>
             {/* 이벤트 객체 e의 타겟 값인 e.target.value를 setNum 함수에 전달하여 num 상태를 업데이트합니다. */}
-            <input type="text" value={num} onChange={ (e) =>  setNum(e.target.value)  } />
+            <input type="text" value={num} onChange={(e) => setNum(e.target.value)} />
           </div>
         </div>
+
+        <Nav variant="tabs" defaultActiveKey="link0">
+          {/* defaultActiveKey="link0"는 처음 사이트 방문시 눌러져있는 버튼 */}
+          <Nav.Item>
+            <Nav.Link onClick={()=>{setTab(0)}} eventKey="link0">버튼0</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link onClick={()=>{setTab(1)}} eventKey="link1">버튼1</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link onClick={()=>{setTab(2)}} eventKey="link2">버튼2</Nav.Link>
+          </Nav.Item>
+        </Nav>
+        
+        <TabContent tab={tab}/>
+
       </div>
     </>
   );
+}
+
+//(팁1)props가 귀찮다면 (props)=>({tab, props2})로 바꾸면 아래 props.tab가 아닌 tab만으로 표현가능
+//(팁2)function TabContent(props){return [ <div>내용0</div>, <div>내용1</div>, <div>내용2</div> ][props.tab]}
+//function TabContent({tab}){return [ <div>내용0</div>, <div>내용1</div>, <div>내용2</div> ][tab]} 도 가능
+function TabContent(props){
+  if(props.tab === 0){
+    return <div>내용0</div>
+  } 
+  
+  if(props.tab === 1){
+    return <div>내용1</div>
+  } 
+  
+  if(props.tab === 2){
+    return <div>내용2</div>
+  }
+  
 }
 
 function Alert() {
