@@ -13,6 +13,7 @@ import data from './data.js';
 import Detail from './routes/Detail.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import axios from 'axios'; //ajax 이용한 GET요청은 axios.get('url'), 요청결과는 axios.get('url').then()
+import Cart from './routes/Cart.js';
 
 // export let Context1 = createContext(); state 보관함 Context API 함수
 
@@ -112,11 +113,12 @@ function App() {
             (참고)URL 파라미터 만들 때  -여러개 가능 ex)'/detail/:id/:a/:b'*/}
 
         <Route path='/detail/:id' element={
-          <Context1.Provider value={{재고, shoes}}>
-            <Detail shoes={shoes}></Detail>
-          </Context1.Provider>
+          <Detail shoes={shoes}></Detail>
         }>
         </Route>
+
+        <Route path='/cart' element={<Cart />}></Route>
+
         <Route path='/about' element={<About></About>}>
           {/* Nested Routes 라고 한다. 태그안에 태그 장정으로 
           1. route 작성이 약간 간단해진다.  2.nested routes 접속신엔 element 2개나 보임
