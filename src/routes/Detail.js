@@ -28,7 +28,8 @@ function Detail(props) {
   let [alert, setAlert] = useState(true);
   let [num, setNum] = useState('');
   let [tab, setTab] = useState(0);
-  
+  let [fade1, setFade1] = useState('');
+
   //Lifecycle
   //Side Effect : 함수의 핵심기능과 상관없는 부가기능, useEffect는 Side Effect 안에 담는 그릇이다.
   //useEffect는 안에있는 코드가 mount, update시에 실행된다.
@@ -37,7 +38,8 @@ function Detail(props) {
   //useEffect 실행조건 넣을 수 있는 곳은 [], []안에 있는 state가 변할때마다 실행, []이 비어있다면 컴포넌트 mount 1번만 실행된다.
   //useEffect 안에 return()=>{}를 넣을 수 있다. useEffect 동작 전에 실행시키고 싶을때 사용.
   useEffect(() => {
-    let timer = setTimeout(() => { setAlert(false) }, 2000)
+    let timer = setTimeout(() => { setAlert(false) }, 2000);
+    setTimeout(()=>{setFade1('end')}, 100);
     if (isNaN(num) == true) {
       window.alert('그러지마세요'); //안됬던 이유는 alert가 이미 변수로 있었기 때문이다.
       setNum('');
@@ -80,7 +82,7 @@ function Detail(props) {
   }
 
   return (
-    <>
+    <div className={'start ' + fade1}>
       <div className="container">
         {
           alert == true ? <Alert></Alert> : null
@@ -107,40 +109,60 @@ function Detail(props) {
         <Nav variant="tabs" defaultActiveKey="link0">
           {/* defaultActiveKey="link0"는 처음 사이트 방문시 눌러져있는 버튼 */}
           <Nav.Item>
-            <Nav.Link onClick={()=>{setTab(0)}} eventKey="link0">버튼0</Nav.Link>
+            <Nav.Link onClick={() => { setTab(0) }} eventKey="link0">버튼0</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link onClick={()=>{setTab(1)}} eventKey="link1">버튼1</Nav.Link>
+            <Nav.Link onClick={() => { setTab(1) }} eventKey="link1">버튼1</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link onClick={()=>{setTab(2)}} eventKey="link2">버튼2</Nav.Link>
+            <Nav.Link onClick={() => { setTab(2) }} eventKey="link2">버튼2</Nav.Link>
           </Nav.Item>
         </Nav>
-        
-        <TabContent tab={tab}/>
+
+        <TabContent tab={tab} />
 
       </div>
-    </>
+    </div>
   );
 }
 
 //(팁1)props가 귀찮다면 (props)=>({tab, props2})로 바꾸면 아래 props.tab가 아닌 tab만으로 표현가능
 //(팁2)function TabContent(props){return [ <div>내용0</div>, <div>내용1</div>, <div>내용2</div> ][props.tab]}
-//function TabContent({tab}){return [ <div>내용0</div>, <div>내용1</div>, <div>내용2</div> ][tab]} 도 가능
-function TabContent(props){
-  if(props.tab === 0){
-    return <div>내용0</div>
-  } 
-  
-  if(props.tab === 1){
-    return <div>내용1</div>
-  } 
-  
-  if(props.tab === 2){
-    return <div>내용2</div>
-  }
-  
+function TabContent({ tab }) {
+
+  let [fade, setFade] = useState('');
+
+  useEffect(()=>{
+    //리액트의 automatic batching 기능
+    //state 변경마다 하는 것이 아니고 마지막 state에서 재렌더링 하는것
+    setTimeout(()=>{setFade('end');},100)
+
+    return ()=>{
+      setFade('');
+    }
+  }, [tab])
+
+  return (<div className={'start ' + fade}>
+    {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tab]}
+  </div>)
 }
+//전환 애니메이션 만들은
+//1.애니메이션 동작 전 className 만들기
+//2.애니메이션 동작 후 className 만들기
+//3.className에 transition 속성 추가
+//4.원할 때 2번 className 부착
+
+// function TabContent(props){
+//   if(props.tab === 0){
+//     return <div>내용0</div>
+//   } 
+//   if(props.tab === 1){
+//     return <div>내용1</div>
+//   } 
+//   if(props.tab === 2){
+//     return <div>내용2</div>
+//   }
+// }
 
 function Alert() {
 
