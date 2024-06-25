@@ -1,8 +1,9 @@
 /* eslint-disable */ //Lint 끄는 기능
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Nav, Tab } from "react-bootstrap"
+import { Nav, Tab } from "react-bootstrap";
+import {Context1} from './../App.js'
 //styled-components를 사용하면 css에 가지 않고 js파일에서 전부 해결가능
 //장점 1.Css파일 안열어도 된다. 2.스타일이 다른 js파일로 오염되지 않는다. 3.페이지 로딩시간 단축
 //단점 1.Js파일 매우복잡해짐. 2.중복스타일은 컴포넌트간 import 할텐데 Css와 다를 바가 없어진다. 3.협업시 CSS 담당의 숙련도 이슈
@@ -24,6 +25,8 @@ import styled from "styled-components";
 
 function Detail(props) {
 
+  //let {재고} = useContext(Context1); 보관함 해체해주는 Context API 함수
+
   let [count, setCount] = useState(0);
   let [alert, setAlert] = useState(true);
   let [num, setNum] = useState('');
@@ -39,7 +42,7 @@ function Detail(props) {
   //useEffect 안에 return()=>{}를 넣을 수 있다. useEffect 동작 전에 실행시키고 싶을때 사용.
   useEffect(() => {
     let timer = setTimeout(() => { setAlert(false) }, 2000);
-    setTimeout(()=>{setFade1('end')}, 100);
+    setTimeout(() => { setFade1('end') }, 100);
     if (isNaN(num) == true) {
       window.alert('그러지마세요'); //안됬던 이유는 alert가 이미 변수로 있었기 때문이다.
       setNum('');
@@ -48,6 +51,7 @@ function Detail(props) {
       // 타이머가 중복되지 않게 기존 타이머를 제거하는 명령어
       // (참고)clean up function은 mount시 실행안됨, unmount시 실행됨
       clearTimeout(timer);
+      setFade1('');
     }
   }, [num])
 
@@ -82,8 +86,8 @@ function Detail(props) {
   }
 
   return (
-    <div className={'start ' + fade1}>
-      <div className="container">
+    <>
+      <div className={"container start " + fade1}>
         {
           alert == true ? <Alert></Alert> : null
         }
@@ -122,22 +126,28 @@ function Detail(props) {
         <TabContent tab={tab} />
 
       </div>
-    </div>
+    </>
   );
 }
 
 //(팁1)props가 귀찮다면 (props)=>({tab, props2})로 바꾸면 아래 props.tab가 아닌 tab만으로 표현가능
 //(팁2)function TabContent(props){return [ <div>내용0</div>, <div>내용1</div>, <div>내용2</div> ][props.tab]}
 function TabContent({ tab }) {
+  //props가 중첩되서 복잡해지는 것이 싫다면
+  //1.Context API(리액트 기본문법)
+  //2.Redux 등 외부라이브러리 활용
+
+  //Context API를 쓰면 props 전송 없이 state 공유가능, 실제로는 많이 쓰지 않는다. 성능도 떨어지고 컴포넌트 재활용이 어려워서.
 
   let [fade, setFade] = useState('');
+  // let {재고} = useContext(Context1);
 
-  useEffect(()=>{
+  useEffect(() => {
     //리액트의 automatic batching 기능
     //state 변경마다 하는 것이 아니고 마지막 state에서 재렌더링 하는것
-    setTimeout(()=>{setFade('end');},100)
+    setTimeout(() => { setFade('end'); }, 100)
 
-    return ()=>{
+    return () => {
       setFade('');
     }
   }, [tab])
