@@ -3,12 +3,14 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Nav, Tab } from "react-bootstrap";
+import { addGoods } from "./../store.js";
 import {Context1} from './../App.js'
 //styled-components를 사용하면 css에 가지 않고 js파일에서 전부 해결가능
 //장점 1.Css파일 안열어도 된다. 2.스타일이 다른 js파일로 오염되지 않는다. 3.페이지 로딩시간 단축
 //단점 1.Js파일 매우복잡해짐. 2.중복스타일은 컴포넌트간 import 할텐데 Css와 다를 바가 없어진다. 3.협업시 CSS 담당의 숙련도 이슈
 //(참고) 오염방지하려면 컴포넌트.module.css하면된다. 그러면 컴포넌트.js에 종속된다. ex)App.module.css
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
 
 // ${props => props.bg} 문법은 외부 라이브러리 사용법이라 이행보다는 그냥 복붙
 // let YellowBtn = styled.button`
@@ -32,6 +34,7 @@ function Detail(props) {
   let [num, setNum] = useState('');
   let [tab, setTab] = useState(0);
   let [fade1, setFade1] = useState('');
+  let dispatch = useDispatch();
 
   //Lifecycle
   //Side Effect : 함수의 핵심기능과 상관없는 부가기능, useEffect는 Side Effect 안에 담는 그릇이다.
@@ -103,7 +106,9 @@ function Detail(props) {
             <h4 className="pt-5">{props.shoes[findId.id].title}</h4>
             <p>{props.shoes[findId.id].content}</p>
             <p>{props.shoes[findId.id].price} Won</p>
-            <button className="btn btn-danger">주문하기</button>
+            <button className="btn btn-danger" onClick={()=>{
+              dispatch(addGoods({id : props.shoes[findId.id].id, name : props.shoes[findId.id].title, count : 1}))
+            }}>주문하기</button>
             <br></br>
             {/* 이벤트 객체 e의 타겟 값인 e.target.value를 setNum 함수에 전달하여 num 상태를 업데이트합니다. */}
             <input type="text" value={num} onChange={(e) => setNum(e.target.value)} />

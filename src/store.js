@@ -19,17 +19,26 @@ let cart = createSlice({
     { id: 2, name: 'Grey Yordan', count: 1 }
   ],
   reducers : {
-    increaseCount(state, action){
+    addCount(state, action){
       // action.payload에서 상품의 ID를 가져옵니다.
       let goodsId = action.payload;
       // array에서 해당 ID를 가진 상품을 찾습니다.
       let goods = state.find(item => item.id === goodsId);
       goods.count += 1;
+      // 코딩애플 방식
+      // let 번호 = state.findIndex((a)=>{ return a.id === action.payload })
+      // state[번호].count++
+    },
+
+    addGoods(state, action){
+      // if(){
+      state.push(action.payload);
+    
     }
   }
 })
 
-export let {increaseCount} = cart.actions;
+export let {addCount,addGoods} = cart.actions;
 
 export default configureStore({
   reducer: { // 작명 : state이름.reducer
