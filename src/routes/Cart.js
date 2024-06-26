@@ -1,15 +1,23 @@
 /* eslint-disable */ //Lint 끄는 기능
 import { Table } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeName, increase } from './../store/userSlice.js';
+import { increaseCount } from './../store.js';
 
 function Cart() {
 
     //Redux 사용하면 컴포넌트들이 props 없이 state 공유가능(React 구인시 대부분 Redux 요구)
-    let a = useSelector((state)=>state.user); //Redux store 가져와줌, store에 있던 state 남음
-    let b = useSelector((state)=>state.myShoes);
+    let a = useSelector((state) => state.user); //Redux store 가져와줌, store에 있던 state 남음
+    let dispatch = useDispatch(); //store.js로 요청보내주는 함수
+    let cart = useSelector((state) => state.cart);
 
     return (
         <div>
+            <h4>나이 {a.age}인 {a.name}의 장바구니</h4>
+            <button onClick={()=>{
+                dispatch(changeName());
+                dispatch(increase(1));
+            }}>버튼</button>
             <Table>
                 <thead>
                     <tr>
@@ -20,19 +28,21 @@ function Cart() {
                     </tr>
                 </thead>
                 <tbody>
-                {b.map(function (a, i) {
-                  return (
-                    <tr key={i}>
-                        <td>{b[i].id}</td>
-                        <td>{b[i].name}</td>
-                        <td>{b[i].count}</td>
-                        <td>안녕</td>
-                    </tr>
-                  )
-                }
-                )
-                }
-                    
+                    {
+                        cart.map((a, i) =>
+                            <tr key={i}>
+                                <td>{cart[i].id}</td>
+                                <td>{cart[i].name}</td>
+                                <td>{cart[i].count}</td>
+                                <td>
+                                    <button onClick={()=>{
+                                        dispatch(increaseCount(cart[i].id))
+                                    }}>+</button>
+                                </td>
+                            </tr>
+                        )
+                    }
+
                 </tbody>
             </Table>
         </div>

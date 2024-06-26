@@ -82,7 +82,7 @@ function App() {
             <Nav.Link onClick={() => { navigate('/') }}>Home</Nav.Link>
             {/* 같은 Home라도 href로 설정하면 새로고침 후 페이지 이동하지만 useNavigate를 사용하면 새로고침 없이 페이지가 이동한다. */}
             {/* navigate(-1)로 설정하면 방금 전 페이지로 이동(뒤로가기)가 된다. */}
-            <Nav.Link onClick={() => { navigate('/detail') }}>Detail</Nav.Link>
+            <Nav.Link onClick={() => { navigate('/cart') }}>cart</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -159,10 +159,14 @@ function About() {
 }
 
 function Goods(props) {
+  //1.페이지 이동을 도와주는 useNavigate()
+  let navigate = useNavigate();
 
   return (
     <Col md={4}>
-      <img src={'https://codingapple1.github.io/shop/shoes' + (props.shoes.id + 1) + '.jpg'} width='80%'></img>
+      <Nav.Link onClick={() => { navigate('/detail/'+(props.shoes.id)) }}>
+        <img src={'https://codingapple1.github.io/shop/shoes' + (props.shoes.id + 1) + '.jpg'} width='80%'></img>
+      </Nav.Link>
       <h4>{props.shoes.title}</h4>
       <p>{props.shoes.price} Won</p>
     </Col>
