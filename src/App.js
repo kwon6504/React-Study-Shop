@@ -14,6 +14,7 @@ import Detail from './routes/Detail.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import axios from 'axios'; //ajax 이용한 GET요청은 axios.get('url'), 요청결과는 axios.get('url').then()
 import Cart from './routes/Cart.js';
+import { useQuery } from 'react-query';
 
 // export let Context1 = createContext(); state 보관함 Context API 함수
 
@@ -74,6 +75,20 @@ function App() {
   //1.페이지 이동을 도와주는 useNavigate()
   let navigate = useNavigate();
 
+  //react-query 이용해서 ajax 요청하면
+  //장점1.성공/실패/로딩중 쉽게 파악가능 (result.data, result.isLoading, result.error)
+  //장점2.틈만나면 자동으로 재요청(refetch)해줌
+  //장점3.실패시 retry 알아서 해줌
+  //장점4.state 공유 안해도 됩니다.
+  //장점5.ajax 결과 캐싱기능
+  let result = useQuery('작명',()=>{
+    return axios.get('https://codingapple1.github.io/userdata.json').then((a)=>{
+      console.log('요청');
+      return a.data
+    }),
+    {staleTime:2000} //뭘해도 2초마다는 하지않고 그후에 뭘 할경우 refetch한다
+  });
+
   // 서버나 DB가 없다면 익스폴러로에 저장하는법 localStorage
   // localStorage들어가는 법 F12 -> Application(console라인 끝쪽) -> Local Storage
   // 1.key : value 형태로 저장가능
@@ -87,7 +102,7 @@ function App() {
   return (
     <div className="App">
 
-      <Navbar bg="dark" data-bs-theme="dark">
+      <Navbar bg="light" data-bs-theme="light">
         <Container>
           <Navbar.Brand href="#home">Shop</Navbar.Brand>
           <Nav className="me-auto">
@@ -99,6 +114,11 @@ function App() {
             {/* 같은 Home라도 href로 설정하면 새로고침 후 페이지 이동하지만 useNavigate를 사용하면 새로고침 없이 페이지가 이동한다. */}
             {/* navigate(-1)로 설정하면 방금 전 페이지로 이동(뒤로가기)가 된다. */}
             <Nav.Link onClick={() => { navigate('/cart') }}>cart</Nav.Link>
+          </Nav>
+          <Nav className='ms-auto'>
+            {result.isLoading ? '로딩중' : result.data.name}
+            {result.error && '에러'}
+            {/* {result.data && result.data.name} */}
           </Nav>
         </Container>
       </Navbar>
