@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Nav, Tab } from "react-bootstrap";
 import { addGoods } from "./../store.js";
-import {Context1} from './../App.js'
+import { Context1 } from './../App.js'
 //styled-components를 사용하면 css에 가지 않고 js파일에서 전부 해결가능
 //장점 1.Css파일 안열어도 된다. 2.스타일이 다른 js파일로 오염되지 않는다. 3.페이지 로딩시간 단축
 //단점 1.Js파일 매우복잡해짐. 2.중복스타일은 컴포넌트간 import 할텐데 Css와 다를 바가 없어진다. 3.협업시 CSS 담당의 숙련도 이슈
@@ -35,6 +35,25 @@ function Detail(props) {
   let [tab, setTab] = useState(0);
   let [fade1, setFade1] = useState('');
   let dispatch = useDispatch();
+
+  useEffect(() => {
+    let obj = localStorage.getItem('watched'); //가져오는 것
+    obj = JSON.parse(obj); //제이슨 형태에서 자바스크립트 형태로 바꿔주는 것
+    if (!obj.includes(findId.id)) { //includes() 매서드는 배열의 특정값이 포함하는지 판단하여 참 거짓으로 보내줌
+      obj.push(findId.id);
+      localStorage.setItem('watched', JSON.stringify(obj));
+      //array에서 중복제거 쉽게하려면 Set 자료형써도 됩니다. array->Set->array
+      //Set은 중복 없앤 array
+      //코딩애플 답변 Set사용
+      // let 꺼낸거 = localStorage.getItem('watched')
+      // 꺼낸거 = JSON.parse(꺼낸거)
+      // 꺼낸거.push(찾은상품.id)
+      // Set으로 바꿨다가 다시 array로 만들기
+      // 꺼낸거 = new Set(꺼낸거)
+      // 꺼낸거 = Array.from(꺼낸거)
+      // localStorage.setItem('watched', JSON.stringify(꺼낸거))
+    }
+  }, [])
 
   //Lifecycle
   //Side Effect : 함수의 핵심기능과 상관없는 부가기능, useEffect는 Side Effect 안에 담는 그릇이다.
@@ -106,8 +125,8 @@ function Detail(props) {
             <h4 className="pt-5">{props.shoes[findId.id].title}</h4>
             <p>{props.shoes[findId.id].content}</p>
             <p>{props.shoes[findId.id].price} Won</p>
-            <button className="btn btn-danger" onClick={()=>{
-              dispatch(addGoods({id : props.shoes[findId.id].id, name : props.shoes[findId.id].title, count : 1}))
+            <button className="btn btn-danger" onClick={() => {
+              dispatch(addGoods({ id: props.shoes[findId.id].id, name: props.shoes[findId.id].title, count: 1 }))
             }}>주문하기</button>
             <br></br>
             {/* 이벤트 객체 e의 타겟 값인 e.target.value를 setNum 함수에 전달하여 num 상태를 업데이트합니다. */}

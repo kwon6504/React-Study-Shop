@@ -5,7 +5,7 @@ import { Button, Container, Nav, Navbar, Row, Col } from 'react-bootstrap';
 // 1.import 작명 from './이미지경로'
 // 2.이미지 경로가 필요한 곳에서 작명한걸 사용
 import bg from './img/bg.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // 리액트는 사이트 발행 전에 html, js, css 파일을 압축함 (bundling)
 // (참고) public 폴더에 있던건 압축안됨
 // <img src={process.env.PUBLIC_URL + '/logo192.png'}></img>
@@ -25,6 +25,12 @@ import Cart from './routes/Cart.js';
 //index.js 가서 <BrowserRouter></BrowserRouter>를 <App />밖으로 감싸면 import한다.
 
 function App() {
+
+  useEffect(() => {
+    if(localStorage.getItem('watched') == null){
+      localStorage.setItem('watched', JSON.stringify([]))
+    }
+  }, [])
 
   //import, export 문법
   //1.변수를 export 하고 = export default 변수명, 변수가 2개라면 export default {변수명1, 변수명2}
@@ -68,6 +74,16 @@ function App() {
   //1.페이지 이동을 도와주는 useNavigate()
   let navigate = useNavigate();
 
+  // 서버나 DB가 없다면 익스폴러로에 저장하는법 localStorage
+  // localStorage들어가는 법 F12 -> Application(console라인 끝쪽) -> Local Storage
+  // 1.key : value 형태로 저장가능
+  // Local Storage : 재접속해도 남아있음
+  // Session Storage : 브라우저 끄면 날라감
+  // let obj = {name : 'kim'};
+  // localStorage.setItem('date', JSON.stringify(obj));
+  // let 꺼낸거 = localStorage.getItem('date');
+  // console.log(JSON.parse(꺼낸거).name);
+
   return (
     <div className="App">
 
@@ -86,6 +102,8 @@ function App() {
           </Nav>
         </Container>
       </Navbar>
+
+      <div className='fixed-right'>나오니</div>
 
       <Routes>
         {/* Route는 상세 페이지 갯수 */}
@@ -164,7 +182,7 @@ function Goods(props) {
 
   return (
     <Col md={4}>
-      <Nav.Link onClick={() => { navigate('/detail/'+(props.shoes.id)) }}>
+      <Nav.Link onClick={() => { navigate('/detail/' + (props.shoes.id)) }}>
         <img src={'https://codingapple1.github.io/shop/shoes' + (props.shoes.id + 1) + '.jpg'} width='80%'></img>
       </Nav.Link>
       <h4>{props.shoes.title}</h4>
