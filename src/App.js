@@ -5,15 +5,21 @@ import { Button, Container, Nav, Navbar, Row, Col } from 'react-bootstrap';
 // 1.import 작명 from './이미지경로'
 // 2.이미지 경로가 필요한 곳에서 작명한걸 사용
 import bg from './img/bg.png';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 // 리액트는 사이트 발행 전에 html, js, css 파일을 압축함 (bundling)
 // (참고) public 폴더에 있던건 압축안됨
 // <img src={process.env.PUBLIC_URL + '/logo192.png'}></img>
+
+//js 파일을 잘게 쪼개는 lazy import : Detail 컴포넌트가 필요해지면 import 해주세요
+//단점으로 로딩이 길어진다. <Suspense>로 감싸면 로딩중 ui넣기 가능이므로 필수로 넣어야 한다. 
+//<Suspense>는 일부말고 전체로 감싸도 상관없다
+const Detail = lazy(() => import('./routes/Detail.js'))
+const Cart = lazy(() => import('./routes/Cart.js'))
 import data from './data.js';
-import Detail from './routes/Detail.js';
+// import Detail from './routes/Detail.js';
+// import Cart from './routes/Cart.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import axios from 'axios'; //ajax 이용한 GET요청은 axios.get('url'), 요청결과는 axios.get('url').then()
-import Cart from './routes/Cart.js';
 import { useQuery } from 'react-query';
 
 // export let Context1 = createContext(); state 보관함 Context API 함수
@@ -28,7 +34,7 @@ import { useQuery } from 'react-query';
 function App() {
 
   useEffect(() => {
-    if(localStorage.getItem('watched') == null){
+    if (localStorage.getItem('watched') == null) {
       localStorage.setItem('watched', JSON.stringify([]))
     }
   }, [])
@@ -81,12 +87,12 @@ function App() {
   //장점3.실패시 retry 알아서 해줌
   //장점4.state 공유 안해도 됩니다.
   //장점5.ajax 결과 캐싱기능
-  let result = useQuery('작명',()=>{
-    return axios.get('https://codingapple1.github.io/userdata.json').then((a)=>{
+  let result = useQuery('작명', () => {
+    return axios.get('https://codingapple1.github.io/userdata.json').then((a) => {
       console.log('요청');
       return a.data
     }),
-    {staleTime:2000} //뭘해도 2초마다는 하지않고 그후에 뭘 할경우 refetch한다
+      { staleTime: 2000 } //뭘해도 2초마다는 하지않고 그후에 뭘 할경우 refetch한다
   });
 
   // 서버나 DB가 없다면 익스폴러로에 저장하는법 localStorage
@@ -151,7 +157,9 @@ function App() {
             (참고)URL 파라미터 만들 때  -여러개 가능 ex)'/detail/:id/:a/:b'*/}
 
         <Route path='/detail/:id' element={
-          <Detail shoes={shoes}></Detail>
+          <Suspense fallback={<div>로딩중임</div>}>
+            <Detail shoes={shoes}></Detail>
+          </Suspense>
         }>
         </Route>
 
