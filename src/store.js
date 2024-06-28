@@ -31,7 +31,9 @@ let cart = createSlice({
     minusCount(state, action) {
       let goodsId = action.payload;
       let goods = state.find(item => item.id === goodsId);
+      if(goods.count > 1){
       goods.count -= 1;
+      }
     },
 
     addGoods(state, action) {
