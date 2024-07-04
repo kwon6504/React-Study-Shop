@@ -9,10 +9,10 @@ import { memo, useState } from 'react';
 //자식 컴포넌트 재렌더링 막기
 //꼭 필요할 때만 재렌더링하려면 memo
 //memo의 원리 : props가 변할 때만 재렌더링 한다.
-// let Child = memo( function(){
-//     console.log('재렌더링됨');
-//     return <div>자식임</div>
-// })
+let Child = memo( function(){
+    console.log('재렌더링됨');
+    return <div>자식임</div>
+})
 //useMemo : 컴포넌트 렌더링시 1회만 실행해준다, function 함수(){}가 10억번을 돌려야한다고 치면
 //let result = useMemo(()=>{ return 함수() }) 이렇게 만들면 렉을 줄일수 있다. (팁) useEffect와 비슷하다.
 
@@ -25,6 +25,8 @@ function Cart() {
 
     return (
         <div>
+            {/* <Child count={count}></Child>
+            <button onClick={()=>{ setCount(count+1) }}>+</button> */}
             <h4>나이 {a.age}인 {a.name}의 장바구니</h4>
             <button onClick={()=>{
                 dispatch(changeName());
